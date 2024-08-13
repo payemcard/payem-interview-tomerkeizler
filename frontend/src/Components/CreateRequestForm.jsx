@@ -2,14 +2,15 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { HOST_WITH_PORT } from "../consts";
 import './CreateRequestForm.css';
+import { requestTypeMap } from "../en";
 
 const CreateRequestForm = () => {
+  const [type, setType] = useState('purchase');
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [amount, setAmount] = useState('');
   const [currency, setCurrency] = useState('USD');
   const [employeeName, setEmployeeName] = useState('');
-  const [status, setStatus] = useState('Pending');
   const [responseMessage, setResponseMessage] = useState(null);  // State to handle response message
 
   const handleInputChange = (setter) => (e) => {
@@ -20,12 +21,12 @@ const CreateRequestForm = () => {
     e.preventDefault();
 
     const newRequest = {
+      type,
       name,
       description,
       amount: parseFloat(amount),
       currency,
       employee_name: employeeName,
-      status,
     };
 
     try {
@@ -33,12 +34,12 @@ const CreateRequestForm = () => {
       setResponseMessage({ type: 'success', text: 'Request Created Successfully!' });
       console.log('Request Created:', response.data);
       // Clear form fields after successful submission
+      setType('');
       setName('');
       setDescription('');
       setAmount('');
       setCurrency('USD');
       setEmployeeName('');
-      setStatus('Pending');
     } catch (error) {
       setResponseMessage({ type: 'error', text: 'Error Creating Request' });
       console.error('Error creating request', error);
@@ -49,6 +50,13 @@ const CreateRequestForm = () => {
     <div className="form-container">
       <h1>Create Request Form</h1>
       <form onSubmit={handleSubmit} className="form">
+      <div className="form-group">
+          <label>Type:</label>
+          <select value={type} onChange={handleInputChange(setType)}>
+            <option value="purchase">{requestTypeMap.purchase}</option>
+            <option value="reimbursement">{requestTypeMap.reimbursement}</option>
+          </select>
+        </div>
         <div className="form-group">
           <label>Name:</label>
           <input type="text" value={name} onChange={handleInputChange(setName)} required />
