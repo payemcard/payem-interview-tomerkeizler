@@ -42,7 +42,7 @@ export class FinancialRequest {
     type: "object",
     properties: {
       type: { type: "string", enum: Object.values(FinancialRequestType) },
-      name: { type: "string", pattern: "^[a-zA-Z]+$" },
+      name: { type: "string", pattern: `^[a-zA-Z\\s]+$` },
       description: { type: "string" },
       amount: { type: "number", minimum: 0 },
       currency: {
@@ -51,7 +51,7 @@ export class FinancialRequest {
         minLength: 3,
         maxLength: 3,
       },
-      employee_name: { type: "string", pattern: "^[a-zA-Z]+$" },
+      employee_name: { type: "string", pattern: `^[a-zA-Z\\s]+$` },
     },
     required: [
       "type",
@@ -67,7 +67,7 @@ export class FinancialRequest {
   static readonly updateSchema = {
     type: "object",
     properties: {
-      name: { type: "string", pattern: "^[a-zA-Z]+$" },
+      name: { type: "string", pattern: `^[a-zA-Z\\s]+$` },
       description: { type: "string" },
       amount: { type: "number", minimum: 0 },
       currency: {
@@ -76,7 +76,7 @@ export class FinancialRequest {
         minLength: 3,
         maxLength: 3,
       },
-      employee_name: { type: "string", pattern: "^[a-zA-Z]+$" },
+      employee_name: { type: "string", pattern: `^[a-zA-Z\\s]+$` },
       status: { type: "string", enum: Object.values(FinancialRequestStatus) },
     },
     minProperties: 1,

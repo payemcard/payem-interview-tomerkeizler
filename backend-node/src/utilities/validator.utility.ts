@@ -20,7 +20,6 @@ export class Validator {
 
     if (!is_valid) {
       const validationErrorList = validate.errors;
-
       throw new PayEmValidationError(validationErrorList as Array<ErrorObject>);
     }
   }

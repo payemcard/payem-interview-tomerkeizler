@@ -8,11 +8,15 @@ import { HttpStatusCode } from "../types/http-status-code.type";
 import { PayEmError } from "../types/payem-error.type";
 
 export default class RequestProvider {
+  get dbData(): Array<FinancialRequest> {
+    return db;
+  }
+
   public getRequestList(
     searchParams: FinancialRequestSearchParams
   ): Array<FinancialRequest> {
     if (!searchParams || Object.keys(searchParams).length === 0) {
-      return db;
+      return this.dbData;
     }
 
     // define search type for FinancialRequest searchable fields
@@ -22,7 +26,7 @@ export default class RequestProvider {
     ];
     const exactSearchfields: Array<keyof FinancialRequest> = ["status"];
 
-    const filteredRequests = db.filter((request) => {
+    const filteredRequests = this.dbData.filter((request) => {
       // for each request in the DB: check whether it satisfies the seacrh params
       return Object.keys(searchParams).every((param) => {
         if (!request.hasOwnProperty(param)) {
@@ -48,13 +52,10 @@ export default class RequestProvider {
   }
 
   public getRequest(requestId: number): FinancialRequest {
-    const request = db.find((request) => request.id === requestId);
+    const request = this.dbData.find((request) => request.id === requestId);
 
     if (!request) {
-      throw new PayEmError(
-        HttpStatusCode.NOT_FOUND,
-        `request ${requestId} does not exist`
-      );
+      throw new PayEmError(HttpStatusCode.NOT_FOUND, `request does not exist`);
     }
     return request;
   }
@@ -64,30 +65,29 @@ export default class RequestProvider {
     updateParams: FinancialRequestUpdateParams
   ): void {
     // Find the index of the request in the database
-    const requestIndex = db.findIndex((request) => request.id === requestId);
+    const requestIndex = this.dbData.findIndex(
+      (request) => request.id === requestId
+    );
 
     if (requestIndex === -1) {
       // Request not found
-      throw new PayEmError(
-        HttpStatusCode.NOT_FOUND,
-        `request ${requestId} does not exist`
-      );
+      throw new PayEmError(HttpStatusCode.NOT_FOUND, `request does not exist`);
     }
 
     // Update the existing request with the new values
     const updatedRequest = {
-      ...db[requestIndex],
+      ...this.dbData[requestIndex],
       ...updateParams,
       updated_at: new Date(),
     };
 
     // Replace the old request with the updated request in the database
-    db[requestIndex] = updatedRequest;
+    this.dbData[requestIndex] = updatedRequest;
   }
 
   public createRequest(newRequest: Omit<FinancialRequest, "id">): number {
     const newRequestId = nextId;
-    db.push({ id: newRequestId, ...newRequest }); // Assign the next available ID
+    this.dbData.push({ id: newRequestId, ...newRequest }); // Assign the next available ID
     incrementNextId(); // Increment the next ID for the next entry
     return newRequestId; // Return the new request ID
   }

@@ -73,6 +73,14 @@ export default class RequestService {
       );
     }
 
+    const request = this.getRequest(requestId);
+    if (request.status === FinancialRequestStatus.Declined) {
+      throw new PayEmError(
+        HttpStatusCode.BAD_REQUEST,
+        "Cannot approve an already declined request"
+      );
+    }
+
     this.updateRequest(requestId, {
       status: FinancialRequestStatus.Approved,
     });
@@ -85,6 +93,14 @@ export default class RequestService {
       throw new PayEmError(
         HttpStatusCode.BAD_REQUEST,
         "request ID parameter is missing"
+      );
+    }
+
+    const request = this.getRequest(requestId);
+    if (request.status === FinancialRequestStatus.Approved) {
+      throw new PayEmError(
+        HttpStatusCode.BAD_REQUEST,
+        "Cannot decline an already approved request"
       );
     }
 
