@@ -9,6 +9,7 @@ import {
 import { HttpStatusCode } from "../types/http-status-code.type";
 import { PayEmError } from "../types/payem-error.type";
 import { Validator } from "../utilities/validator.utility";
+import ErrorMessage from "../types/error-message.type";
 
 export default class RequestService {
   private static _requestProvider: RequestProvider;
@@ -33,7 +34,7 @@ export default class RequestService {
     if (!requestId) {
       throw new PayEmError(
         HttpStatusCode.BAD_REQUEST,
-        "request ID parameter is missing"
+        ErrorMessage.ERROR_MISSING_REQUEST_ID
       );
     }
 
@@ -48,7 +49,7 @@ export default class RequestService {
     if (!requestId) {
       throw new PayEmError(
         HttpStatusCode.BAD_REQUEST,
-        "request ID parameter is missing"
+        ErrorMessage.ERROR_MISSING_REQUEST_ID
       );
     }
 
@@ -69,7 +70,7 @@ export default class RequestService {
     if (!requestId) {
       throw new PayEmError(
         HttpStatusCode.BAD_REQUEST,
-        "request ID parameter is missing"
+        ErrorMessage.ERROR_MISSING_REQUEST_ID
       );
     }
 
@@ -77,7 +78,7 @@ export default class RequestService {
     if (request.status === FinancialRequestStatus.Declined) {
       throw new PayEmError(
         HttpStatusCode.BAD_REQUEST,
-        "Cannot approve an already declined request"
+        ErrorMessage.ERROR_CANNOT_APPROVE_DECLINED_REQUEST
       );
     }
 
@@ -92,7 +93,7 @@ export default class RequestService {
     if (!requestId) {
       throw new PayEmError(
         HttpStatusCode.BAD_REQUEST,
-        "request ID parameter is missing"
+        ErrorMessage.ERROR_MISSING_REQUEST_ID
       );
     }
 
@@ -100,7 +101,7 @@ export default class RequestService {
     if (request.status === FinancialRequestStatus.Approved) {
       throw new PayEmError(
         HttpStatusCode.BAD_REQUEST,
-        "Cannot decline an already approved request"
+        ErrorMessage.ERROR_CANNOT_DECLINE_APPROVED_REQUEST
       );
     }
 

@@ -9,6 +9,7 @@ import RequestService from "./request.service";
 import { PayEmError } from "../types/payem-error.type";
 import { HttpStatusCode } from "../types/http-status-code.type";
 import { PayEmValidationError } from "../types/valitation-error.type";
+import ErrorMessage from "../types/error-message.type";
 
 describe("RequestService", () => {
   let requestService: RequestService;
@@ -69,7 +70,9 @@ describe("RequestService", () => {
       expect((error as PayEmError).httpStatusCode).toBe(
         HttpStatusCode.NOT_FOUND
       );
-      expect((error as PayEmError).message).toBe("request does not exist");
+      expect((error as PayEmError).message).toBe(
+        ErrorMessage.ERROR_FINANCIAL_REQUEST_NOT_FOUND
+      );
     }
   });
 
@@ -128,7 +131,7 @@ describe("RequestService", () => {
         HttpStatusCode.BAD_REQUEST
       );
       expect((error as PayEmError).message).toBe(
-        "Cannot approve an already declined request"
+        ErrorMessage.ERROR_CANNOT_APPROVE_DECLINED_REQUEST
       );
     }
   });
@@ -173,7 +176,7 @@ describe("RequestService", () => {
         HttpStatusCode.BAD_REQUEST
       );
       expect((error as PayEmValidationError).message).toBe(
-        "Data validation failed"
+        ErrorMessage.ERROR_DATA_VALIDATION_FAILED
       );
       expect((error as PayEmValidationError).validationErrors).toBeDefined();
       expect((error as PayEmValidationError).validationErrors).toBeInstanceOf(

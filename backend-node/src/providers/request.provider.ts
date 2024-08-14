@@ -4,6 +4,7 @@ import {
   FinancialRequestSearchParams,
   FinancialRequestUpdateParams,
 } from "../models/financial-request.model";
+import ErrorMessage from "../types/error-message.type";
 import { HttpStatusCode } from "../types/http-status-code.type";
 import { PayEmError } from "../types/payem-error.type";
 
@@ -55,7 +56,10 @@ export default class RequestProvider {
     const request = this.dbData.find((request) => request.id === requestId);
 
     if (!request) {
-      throw new PayEmError(HttpStatusCode.NOT_FOUND, `request does not exist`);
+      throw new PayEmError(
+        HttpStatusCode.NOT_FOUND,
+        ErrorMessage.ERROR_FINANCIAL_REQUEST_NOT_FOUND
+      );
     }
     return request;
   }
@@ -71,7 +75,10 @@ export default class RequestProvider {
 
     if (requestIndex === -1) {
       // Request not found
-      throw new PayEmError(HttpStatusCode.NOT_FOUND, `request does not exist`);
+      throw new PayEmError(
+        HttpStatusCode.NOT_FOUND,
+        ErrorMessage.ERROR_FINANCIAL_REQUEST_NOT_FOUND
+      );
     }
 
     // Update the existing request with the new values
